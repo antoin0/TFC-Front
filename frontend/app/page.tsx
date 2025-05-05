@@ -1,103 +1,364 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from 'react';
+import router, { useRouter } from 'next/compat/router';
+import { stringify } from 'querystring';
+
+const CLASES = [
+  { value: 'stalker', label: 'Stalker' },
+  { value: 'mecanico', label: 'Mecanico' },
+  { value: 'ciberchaman', label: 'Ciberchaman' },
+  { value: 'granjero', label: 'Granjero' },
+];
+
+const TRAUMA_RESPONSE = [
+  { value: 'stalker', label: 'Cuando entras en pánico, todo aliado cercano debe hacer una salvación de MIEDO' },
+  { value: 'mecanico', label: 'Los jugadores cercanos a ti tienen desventaja en las salvaciones de MIEDO' },
+  { value: 'ciberchaman', label: 'Cuando fallas una salvación de cordura, todos los jugadores cercanos ganan 1 ESTRÉS' },
+  { value: 'granjero', label: 'Una vez por sesión, puedes tener ventaja en un check de PÁNICO' },
+];
+
+const INITIAL_FORM_DATA = {
+  usuario: 1,
+  nombre: 'Juanito Alimaña',
+  clase: 'stalker',
+  fuerza: 0,
+  velocidad: 0,
+  intelig: 0,
+  combat: 0,
+  sanity: 0,
+  fear: 0,
+  cuerpo: 0,
+  maxHP: 0,
+  maxWounds: 2,
+  stress: 2,
+  traumaRes: 'stalker',
+  dinero: 0,
+  armorPoints: 0,
+  extras: 'Describe aqui tu personaje',
+};
+
+export default function CreatePersonaje() {
+  const router = useRouter();
+
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+
+    // Automatically sync traumaRes with clase
+    if (name === 'clase') {
+      setFormData((prev) => ({
+        ...prev,
+        clase: value,
+        traumaRes: value,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'extras' || name === 'nombre' ? value : Number(value),
+      }));
+    }
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/pejotas/', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (res.ok) {
+        router.push('/api/pejotas'); // Redirect or success page
+
+      } else {
+        console.error(formData)
+        console.error('Error al crear personaje');
+      }
+    } catch (error) {
+      console.error('Error en envío:', error);
+    }
+  };
+
+  //Logica del navbar+contenido de cada paso de creacion
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <>
+            <label className="block mb-4">
+              Nombre:
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Clase:
+              <select
+                name="clase"
+                value={formData.clase}
+                onChange={handleChange}
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              >
+                {CLASES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <label className="block mb-4">
+              Fuerza:
+              <input
+                type="number"
+                name="fuerza"
+                value={formData.fuerza}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Velocidad:
+              <input
+                type="number"
+                name="velocidad"
+                value={formData.velocidad}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Inteligencia:
+              <input
+                type="number"
+                name="intelig"
+                value={formData.intelig}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Combate:
+              <input
+                type="number"
+                name="combat"
+                value={formData.combat}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <label className="block mb-4">
+              Cordura:
+              <input
+                type="number"
+                name="sanity"
+                value={formData.sanity}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Miedo:
+              <input
+                type="number"
+                name="fear"
+                value={formData.fear}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Cuerpo:
+              <input
+                type="number"
+                name="cuerpo"
+                value={formData.cuerpo}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <label className="block mb-4">
+              Salud máxima:
+              <input
+                type="number"
+                name="maxHP"
+                value={formData.maxHP}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Heridas máximas:
+              <input
+                type="number"
+                name="maxWounds"
+                value={formData.maxWounds}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Estrés:
+              <input
+                type="number"
+                name="stress"
+                value={formData.stress}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Trauma Response:
+              <select
+                name="traumaRes"
+                value={formData.traumaRes}
+                onChange={handleChange}
+                disabled
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              >
+                {TRAUMA_RESPONSE.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <label className="block mb-4">
+              Dinero:
+              <input
+                type="number"
+                name="dinero"
+                value={formData.dinero}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Armor Points:
+              <input
+                type="number"
+                name="armorPoints"
+                value={formData.armorPoints}
+                onChange={handleChange}
+                required
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              Extras:
+              <textarea
+                name="extras"
+                maxLength={500}
+                value={formData.extras}
+                onChange={handleChange}
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full h-32"
+              />
+            </label>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="bg-black text-white font-mono p-6 max-w-2xl mx-auto border-2 border-red-500">
+      <h1 className="text-red-500 text-3xl uppercase border-b-2 border-red-500 pb-2 mb-6">Crear Personaje</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Barra de Navegación */}
+      <div className="flex justify-around mb-6">
+        {['1', '2', '3', '4', '5'].map((step) => (
+          <button
+            key={step}
+            onClick={() => setCurrentStep(Number(step))}
+            className={`py-2 px-4 border ${currentStep === Number(step) ? 'bg-red-500 text-black' : 'bg-black text-white'}`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Paso {step}
+          </button>
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        {renderStep()}
+
+        {/* Contenedor de los botones en línea */}
+        <div className="flex space-x-4 mt-6">
+          {/* Botón Anterior */}
+          {currentStep !== 1 && currentStep !== 5 && (
+            <button
+              type="button"
+              onClick={() => setCurrentStep((currentStep) => currentStep - 1)} // Decrementa el paso
+              className="bg-black text-white border border-red-500 p-3 w-1/2 hover:bg-red-500 hover:text-black transition duration-200"
+            >
+              Anterior
+            </button>
+          )}
+
+          {/* Botón Siguiente */}
+          {currentStep !== 5 && (
+            <button
+              type="button"
+              onClick={() => setCurrentStep((currentStep) => currentStep + 1)} // Incrementa el paso
+              className="bg-black text-white border border-red-500 p-3 w-full hover:bg-red-500 hover:text-black transition duration-200"
+            >
+              Siguiente
+            </button>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Botón de crear solo en el paso 5 */}
+        {currentStep === 5 && (
+          <button
+            type="submit"
+            className="bg-black text-white border border-red-500 p-3 mt-6 w-full hover:bg-red-500 hover:text-black transition duration-200"
+          >
+            Crear
+          </button>
+        )}
+      </form>
     </div>
   );
 }
