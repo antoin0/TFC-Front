@@ -5,23 +5,57 @@ import router, { useRouter } from 'next/compat/router';
 import { stringify } from 'querystring';
 
 const CLASES = [
-  { value: 'stalker', label: 'Stalker' },
-  { value: 'mecanico', label: 'Mecanico' },
-  { value: 'ciberchaman', label: 'Ciberchaman' },
-  { value: 'granjero', label: 'Granjero' },
+  {
+    value: 'stalker',
+    label: 'Stalker',
+    descr:
+      '+10 Combate\n+10 Salvación de Cuerpo\n+20 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nAptitud de combate\nAtletismo\nBonus: 1 Expert OR 2 Trained Skills',
+  },
+  {
+    value: 'mecanico',
+    label: 'Mecánico',
+    descr:
+      '+20 Intelecto\n-10 a un atributo\n+60 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nEquipamiento industrial\nChapuzas\nBonus: 1 Expert OR 2 Trained Skills',
+  },
+  {
+    value: 'ciberchaman',
+    label: 'Ciberchamán',
+    descr:
+      '+10 Intelecto\n+5 a un atributo\n+30 Salvación de Cordura\n+++ Skills +++\nMaster skill + expert and trained prerequisite skills\nBonus: 1 trained skill',
+  },
+  {
+    value: 'granjero',
+    label: 'Granjero',
+    descr:
+      '+5 a todos los atributos\n+10 a todas las salvaciones\n+++ Skills +++\nEquipamiento industrial\nPatologia\nBonus: 1 Expert 1 Trained skill',
+  },
 ];
 
 const TRAUMA_RESPONSE = [
-  { value: 'stalker', label: 'Cuando entras en pánico, todo aliado cercano debe hacer una salvación de MIEDO' },
-  { value: 'mecanico', label: 'Los jugadores cercanos a ti tienen desventaja en las salvaciones de MIEDO' },
-  { value: 'ciberchaman', label: 'Cuando fallas una salvación de cordura, todos los jugadores cercanos ganan 1 ESTRÉS' },
-  { value: 'granjero', label: 'Una vez por sesión, puedes tener ventaja en un check de PÁNICO' },
+  {
+    value: 'stalker',
+    label: 'Cuando entras en pánico, todo aliado cercano debe hacer una salvación de MIEDO'
+  },
+  {
+    value: 'mecanico',
+    label: 'Los jugadores cercanos a ti tienen desventaja en las salvaciones de MIEDO',
+  },
+  {
+    value: 'ciberchaman',
+    label: 'Cuando fallas una salvación de cordura, todos los jugadores cercanos ganan 1 ESTRÉS',
+  },
+  {
+    value: 'granjero',
+    label: 'Una vez por sesión, puedes tener ventaja en un check de PÁNICO',
+  },
 ];
 
+//Initial form info
 const INITIAL_FORM_DATA = {
   usuario: 1,
-  nombre: 'Juanito Alimaña',
+  nombre: 'Juanito Golondrina',
   clase: 'stalker',
+  descr: 'stalker',
   fuerza: 0,
   velocidad: 0,
   intelig: 0,
@@ -35,7 +69,7 @@ const INITIAL_FORM_DATA = {
   traumaRes: 'stalker',
   dinero: 0,
   armorPoints: 0,
-  extras: 'Describe aqui tu personaje',
+  extras: 'Parche, bagatela, y alguna descripcion extra que te guste !',
 };
 
 export default function CreatePersonaje() {
@@ -48,14 +82,16 @@ export default function CreatePersonaje() {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
 
-    // Automatically sync traumaRes with clase
+    //sync traumaRes with clase
     if (name === 'clase') {
       setFormData((prev) => ({
+        ///...prev para cerciorar que no perdemos informacion del resto de campos al actualizar solo algunos
         ...prev,
         clase: value,
         traumaRes: value,
       }));
     } else {
+      //Aseguramos que el resto de campos del form mantienen su tipo (texto o number)
       setFormData((prev) => ({
         ...prev,
         [name]: name === 'extras' || name === 'nombre' ? value : Number(value),
@@ -64,6 +100,14 @@ export default function CreatePersonaje() {
   };
 
 
+  //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
+  const rollDice = () => {
+    return Math.floor(Math.random()
+      * (1 - 10 + 1)) + 1;
+  };
+
+
+  //Logica de enviar al back la informacion del form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -76,7 +120,7 @@ export default function CreatePersonaje() {
       });
 
       if (res.ok) {
-        router.push('/api/pejotas'); // Redirect or success page
+        router.push('/api/pejotas'); // TODO: Redirect a pagina de visualizar hoja chula (WIP)
 
       } else {
         console.error(formData)
@@ -87,13 +131,45 @@ export default function CreatePersonaje() {
     }
   };
 
+  // Funciones que manejan las tiradas de dado por cada paso
+  const handleStep2 = () => {
+    //Stats = 1d10+1d10+25
+    setFormData((prev) => ({
+      ...prev,
+      fuerza: rollDice() + rollDice() + 25,
+      velocidad: rollDice() + rollDice() + 25,
+      intelig: rollDice() + rollDice() + 25,
+      combat: rollDice() + rollDice() + 25,
+    }))
+  };
+
+  const handleStep3 = () => {
+    //Salvaciones = 1d10+1d10+10
+    setFormData((prev) => ({
+      ...prev,
+      sanity: rollDice() + rollDice() + 10,
+      fear: rollDice() + rollDice() + 10,
+      cuerpo: rollDice() + rollDice() + 10,
+    }))
+  };
+
+  const handleStep4 = () => {
+    //Salud = 1d10+10
+    setFormData((prev) => ({
+      ...prev,
+      maxHP: rollDice() + 10,
+    }))
+  };
+
+
   //Logica del navbar+contenido de cada paso de creacion
   const renderStep = () => {
     switch (currentStep) {
       case 1:
+        const claseFocus = CLASES.find(c => c.value === formData.clase)
         return (
           <>
-            <label className="block mb-4">
+            <label className="block mb-4 w-full">
               Nombre:
               <input
                 type="text"
@@ -119,6 +195,12 @@ export default function CreatePersonaje() {
                 ))}
               </select>
             </label>
+            <label className="block mb-4">
+              Información de la clase:
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full whitespace-pre-line rounded min-h-[3rem]">
+                {claseFocus?.descr || ''}
+              </div>
+            </label>
           </>
         );
       case 2:
@@ -126,47 +208,27 @@ export default function CreatePersonaje() {
           <>
             <label className="block mb-4">
               Fuerza:
-              <input
-                type="number"
-                name="fuerza"
-                value={formData.fuerza}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.fuerza}
+              </div>
             </label>
             <label className="block mb-4">
               Velocidad:
-              <input
-                type="number"
-                name="velocidad"
-                value={formData.velocidad}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.velocidad}
+              </div>
             </label>
             <label className="block mb-4">
               Inteligencia:
-              <input
-                type="number"
-                name="intelig"
-                value={formData.intelig}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.intelig}
+              </div>
             </label>
             <label className="block mb-4">
               Combate:
-              <input
-                type="number"
-                name="combat"
-                value={formData.combat}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.combat}
+              </div>
             </label>
           </>
         );
@@ -175,36 +237,21 @@ export default function CreatePersonaje() {
           <>
             <label className="block mb-4">
               Cordura:
-              <input
-                type="number"
-                name="sanity"
-                value={formData.sanity}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.sanity}
+              </div>
             </label>
             <label className="block mb-4">
               Miedo:
-              <input
-                type="number"
-                name="fear"
-                value={formData.fear}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.fear}
+              </div>
             </label>
             <label className="block mb-4">
               Cuerpo:
-              <input
-                type="number"
-                name="cuerpo"
-                value={formData.cuerpo}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.cuerpo}
+              </div>
             </label>
           </>
         );
@@ -213,52 +260,27 @@ export default function CreatePersonaje() {
           <>
             <label className="block mb-4">
               Salud máxima:
-              <input
-                type="number"
-                name="maxHP"
-                value={formData.maxHP}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.maxHP}
+              </div>
             </label>
             <label className="block mb-4">
               Heridas máximas:
-              <input
-                type="number"
-                name="maxWounds"
-                value={formData.maxWounds}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.maxWounds}
+              </div>
             </label>
             <label className="block mb-4">
               Estrés:
-              <input
-                type="number"
-                name="stress"
-                value={formData.stress}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.stress}
+              </div>
             </label>
             <label className="block mb-4">
               Trauma Response:
-              <select
-                name="traumaRes"
-                value={formData.traumaRes}
-                onChange={handleChange}
-                disabled
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              >
-                {TRAUMA_RESPONSE.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {TRAUMA_RESPONSE.find((t) => t.value === formData.traumaRes)?.label}
+              </div>
             </label>
           </>
         );
@@ -267,25 +289,15 @@ export default function CreatePersonaje() {
           <>
             <label className="block mb-4">
               Dinero:
-              <input
-                type="number"
-                name="dinero"
-                value={formData.dinero}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.dinero}
+              </div>
             </label>
             <label className="block mb-4">
               Armor Points:
-              <input
-                type="number"
-                name="armorPoints"
-                value={formData.armorPoints}
-                onChange={handleChange}
-                required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              />
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {formData.armorPoints}
+              </div>
             </label>
             <label className="block mb-4">
               Extras:
@@ -322,9 +334,10 @@ export default function CreatePersonaje() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {/*Creamos el form, su contenido es el return de la funcion renderStep */}
         {renderStep()}
 
-        {/* Contenedor de los botones en línea */}
+        {/* Contenedor de los botones anterior/siguiente/crear */}
         <div className="flex space-x-4 mt-6">
           {/* Botón Anterior */}
           {currentStep !== 1 && currentStep !== 5 && (
@@ -347,17 +360,47 @@ export default function CreatePersonaje() {
               Siguiente
             </button>
           )}
-        </div>
 
-        {/* Botón de crear solo en el paso 5 */}
-        {currentStep === 5 && (
-          <button
-            type="submit"
-            className="bg-black text-white border border-red-500 p-3 mt-6 w-full hover:bg-red-500 hover:text-black transition duration-200"
-          >
-            Crear
-          </button>
-        )}
+          {/* Botón de rollear los stats */}
+          {/* Botón de tirar los dados ! */}
+          {currentStep !== 1 && (
+            <button
+              type="button"
+              onClick={() => {
+                // Llamar a la función adecuada dependiendo del paso
+                switch (currentStep) {
+                  case 2:
+                    handleStep2();  // Llama a la función para el paso 2
+                    break;
+
+                  case 3:
+                    handleStep3();  // Llama a la función para el paso 3
+                    break;
+
+                  case 4:
+                    handleStep4();  // Llama a la función para el paso 4
+                    break;
+                }
+              }}
+              className="bg-black text-white border border-red-500 p-3 w-full hover:bg-red-500 hover:text-black transition duration-200"
+            >
+              Roll the dice !
+            </button>
+          )}
+
+
+
+
+          {/* Botón de crear solo en el paso 5 */}
+          {currentStep === 5 && (
+            <button
+              type="submit"
+              className="bg-black text-white border border-red-500 p-3 mt-6 w-full hover:bg-red-500 hover:text-black transition duration-200"
+            >
+              Crear
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
