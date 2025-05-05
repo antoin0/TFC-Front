@@ -103,7 +103,7 @@ export default function CreatePersonaje() {
   //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
   const rollDice = () => {
     return Math.floor(Math.random()
-      * (1 - 10 + 1)) + 1;
+      * (10 - 1 + 1)) + 1;
   };
 
 
@@ -350,6 +350,33 @@ export default function CreatePersonaje() {
             </button>
           )}
 
+          {/* Botón de tirar los dados ! (rollear stats)*/}
+          {currentStep !== 1 && currentStep !== 5 && (
+            <button
+              type="button"
+              onClick={() => {
+                // Llamar a la función adecuada dependiendo del paso (influye en el calculo)
+                switch (currentStep) {
+                  case 2:
+                    handleStep2();
+                    break;
+
+                  case 3:
+                    handleStep3();
+                    break;
+
+                  case 4:
+                    handleStep4();
+                    break;
+                }
+              }}
+              className="bg-black text-red-500 border border-red-500 p-3 w-full hover:bg-red-500 hover:text-black transition duration-200"
+            >
+              Roll the dice !
+            </button>
+          )}
+
+
           {/* Botón Siguiente */}
           {currentStep !== 5 && (
             <button
@@ -360,35 +387,6 @@ export default function CreatePersonaje() {
               Siguiente
             </button>
           )}
-
-          {/* Botón de rollear los stats */}
-          {/* Botón de tirar los dados ! */}
-          {currentStep !== 1 && (
-            <button
-              type="button"
-              onClick={() => {
-                // Llamar a la función adecuada dependiendo del paso
-                switch (currentStep) {
-                  case 2:
-                    handleStep2();  // Llama a la función para el paso 2
-                    break;
-
-                  case 3:
-                    handleStep3();  // Llama a la función para el paso 3
-                    break;
-
-                  case 4:
-                    handleStep4();  // Llama a la función para el paso 4
-                    break;
-                }
-              }}
-              className="bg-black text-white border border-red-500 p-3 w-full hover:bg-red-500 hover:text-black transition duration-200"
-            >
-              Roll the dice !
-            </button>
-          )}
-
-
 
 
           {/* Botón de crear solo en el paso 5 */}
