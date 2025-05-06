@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import router, { useRouter } from 'next/compat/router';
-import { stringify } from 'querystring';
+import SkillTreeSimplificado from './SkillTree/page';
 
 const CLASES = [
   {
@@ -10,24 +10,28 @@ const CLASES = [
     label: 'Stalker',
     descr:
       '+10 Combate\n+10 Salvación de Cuerpo\n+20 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nAptitud de combate\nAtletismo\nBonus: 1 Expert OR 2 Trained Skills',
+    defaultSkills: ['ap_combate', 'atletismo'],
   },
   {
     value: 'mecanico',
     label: 'Mecánico',
     descr:
       '+20 Intelecto\n-10 a un atributo\n+60 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nEquipamiento industrial\nChapuzas\nBonus: 1 Expert OR 2 Trained Skills',
+    defaultSkills: ['eq_industrial', 'chapuzas', 'arqueologia'],
   },
   {
     value: 'ciberchaman',
     label: 'Ciberchamán',
     descr:
       '+10 Intelecto\n+5 a un atributo\n+30 Salvación de Cordura\n+++ Skills +++\nMaster skill + expert and trained prerequisite skills\nBonus: 1 trained skill',
+    defaultSkills: [],
   },
   {
     value: 'granjero',
     label: 'Granjero',
     descr:
       '+5 a todos los atributos\n+10 a todas las salvaciones\n+++ Skills +++\nEquipamiento industrial\nPatologia\nBonus: 1 Expert 1 Trained skill',
+    defaultSkills: ['eq_industrial', 'patologia'],
   },
 ];
 
@@ -50,6 +54,141 @@ const TRAUMA_RESPONSE = [
   },
 ];
 
+const SKILLS = [
+  {
+    value: 'cirugia',
+    label: 'Cirugia',
+    prerq: ['primeros_auxilios'],
+    tier: "M",
+  },
+  {
+    value: 'primeros_auxilios',
+    label: 'Primeros auxilios',
+    prerq: ['patologia'],
+    tier: "E",
+  },
+  {
+    value: 'patologia',
+    label: 'Patologia',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'ingenieria',
+    label: 'Ingenieria',
+    prerq: ['reparaciones'],
+    tier: "M",
+  },
+  {
+    value: 'reparaciones',
+    label: 'Reparaciones',
+    prerq: ['eq_industrial', 'chapuzas'],
+    tier: "E",
+  },
+  {
+    value: 'eq_industrial',
+    label: 'Equipamiento industrial',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'cibernetica',
+    label: 'Cibernetica',
+    prerq: ['explosivos', 'reparaciones'],
+    tier: "M",
+  },
+  {
+    value: 'explosivos',
+    label: 'Explosivos',
+    prerq: ['chapuzas', 'quimica'],
+    tier: "E",
+  },
+  {
+    value: 'chapuzas',
+    label: 'Chapuzas',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'farmacologia',
+    label: 'Farmacologia',
+    prerq: ['quimica'],
+    tier: "E",
+  },
+  {
+    value: 'quimica',
+    label: 'Quimica',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'hackeo',
+    label: 'Hackeo',
+    prerq: ['terminales'],
+    tier: "M",
+  },
+  {
+    value: 'terminales',
+    label: 'Terminales',
+    prerq: ['arqueologia'],
+    tier: "E",
+  },
+  {
+    value: 'demonologia',
+    label: 'Demonologia',
+    prerq: ['esoterica'],
+    tier: "M",
+  },
+  {
+    value: 'esoterica',
+    label: 'Esoterica',
+    prerq: ['arqueologia'],
+    tier: "E",
+  },
+  {
+    value: 'arqueologia',
+    label: 'Arqueologia',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'supervivencia',
+    label: 'Supervivencia',
+    prerq: ['arqueologia', 'ap_combate'],
+    tier: "E",
+  },
+  {
+    value: 'voz_mando',
+    label: 'Voz de mando',
+    prerq: ['firearms'],
+    tier: "M",
+  },
+  {
+    value: 'firearms',
+    label: 'Armas de fuego',
+    prerq: ['ap_combate'],
+    tier: "E",
+  },
+  {
+    value: 'ap_combate',
+    label: 'Aptitud de combate',
+    prerq: [],
+    tier: "T",
+  },
+  {
+    value: 'melee',
+    label: 'Cuerpo a cuerpo',
+    prerq: ['ap_combate', 'atletismo'],
+    tier: "E",
+  },
+  {
+    value: 'atletismo',
+    label: 'Atletismo',
+    prerq: [],
+    tier: "T"
+  },
+]
+
 //Initial form info
 const INITIAL_FORM_DATA = {
   usuario: 1,
@@ -69,7 +208,8 @@ const INITIAL_FORM_DATA = {
   traumaRes: 'stalker',
   dinero: 0,
   armorPoints: 0,
-  extras: 'Parche, bagatela, y alguna descripcion extra que te guste !',
+  habilidades: [],
+  extras: 'Escribe aquí tu parche y tu bagatela, así como cualquier otra información sobre tu personaje',
 };
 
 export default function CreatePersonaje() {
@@ -110,26 +250,33 @@ export default function CreatePersonaje() {
   //Logica de enviar al back la informacion del form
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const payload = {
+      ...formData,
+      habilidades: JSON.stringify(formData.habilidades), // convierte el array en string
+    };
+
     try {
       const res = await fetch('http://127.0.0.1:8000/api/pejotas/', {
         method: 'POST',
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload), // usa `payload`, no `formData`
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (res.ok) {
-        router.push('/api/pejotas'); // TODO: Redirect a pagina de visualizar hoja chula (WIP)
-
+        router.push('/api/pejotas/');
       } else {
-        console.error(formData)
+        console.error(payload);
         console.error('Error al crear personaje');
       }
     } catch (error) {
       console.error('Error en envío:', error);
     }
   };
+
+
 
   // Funciones que manejan las tiradas de dado por cada paso
   const handleStep2 = () => {
@@ -166,6 +313,7 @@ export default function CreatePersonaje() {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
+        //Nombre, clase, informacion de la clase
         const claseFocus = CLASES.find(c => c.value === formData.clase)
         return (
           <>
@@ -204,6 +352,7 @@ export default function CreatePersonaje() {
           </>
         );
       case 2:
+        //Estadisticas del personaje (Fuerza, velocidad, inteligencia y combate)
         return (
           <>
             <label className="block mb-4">
@@ -233,6 +382,7 @@ export default function CreatePersonaje() {
           </>
         );
       case 3:
+        //Salvaciones del personaje (Cordura, miedo, cuerpo)
         return (
           <>
             <label className="block mb-4">
@@ -256,6 +406,7 @@ export default function CreatePersonaje() {
           </>
         );
       case 4:
+        //Salud maxima, heridas maximas, estrés, trauma response
         return (
           <>
             <label className="block mb-4">
@@ -285,6 +436,27 @@ export default function CreatePersonaje() {
           </>
         );
       case 5:
+        const currentClass = CLASES.find(c => c.value === formData.clase);
+        const tierLimits = currentClass?.tierLimits || { T: 0, E: 0, M: 0 };
+        const defaultSkills = currentClass?.defaultSkills || [];
+
+        return (
+          <>
+            <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
+            <SkillTreeSimplificado
+              skills={SKILLS}
+              selected={formData.habilidades}
+              onChange={(newSkills) =>
+                setFormData((prev) => ({ ...prev, habilidades: newSkills }))
+              }
+              defaultSkills={defaultSkills}
+              tierLimits={tierLimits}
+            />
+          </>
+        );
+
+      case 6:
+        //Dinero, armadura, extras
         return (
           <>
             <label className="block mb-4">
@@ -322,7 +494,7 @@ export default function CreatePersonaje() {
 
       {/* Barra de Navegación */}
       <div className="flex justify-around mb-6">
-        {['1', '2', '3', '4', '5'].map((step) => (
+        {['1', '2', '3', '4', '5', '6'].map((step) => (
           <button
             key={step}
             onClick={() => setCurrentStep(Number(step))}
@@ -340,7 +512,7 @@ export default function CreatePersonaje() {
         {/* Contenedor de los botones anterior/siguiente/crear */}
         <div className="flex space-x-4 mt-6">
           {/* Botón Anterior */}
-          {currentStep !== 1 && currentStep !== 5 && (
+          {currentStep !== 1 && currentStep !== 6 && (
             <button
               type="button"
               onClick={() => setCurrentStep((currentStep) => currentStep - 1)} // Decrementa el paso
@@ -350,8 +522,8 @@ export default function CreatePersonaje() {
             </button>
           )}
 
-          {/* Botón de tirar los dados ! (rollear stats)*/}
-          {currentStep !== 1 && currentStep !== 5 && (
+          {/* Botón de tirar los dados (rollear stats)*/}
+          {currentStep !== 1 && currentStep !== 6 && currentStep !== 5 && (
             <button
               type="button"
               onClick={() => {
@@ -378,7 +550,7 @@ export default function CreatePersonaje() {
 
 
           {/* Botón Siguiente */}
-          {currentStep !== 5 && (
+          {currentStep !== 6 && (
             <button
               type="button"
               onClick={() => setCurrentStep((currentStep) => currentStep + 1)} // Incrementa el paso
@@ -389,8 +561,8 @@ export default function CreatePersonaje() {
           )}
 
 
-          {/* Botón de crear solo en el paso 5 */}
-          {currentStep === 5 && (
+          {/* Botón de crear solo en el paso 6 */}
+          {currentStep === 6 && (
             <button
               type="submit"
               className="bg-black text-white border border-red-500 p-3 mt-6 w-full hover:bg-red-500 hover:text-black transition duration-200"
