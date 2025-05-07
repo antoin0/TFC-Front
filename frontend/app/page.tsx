@@ -226,6 +226,8 @@ export default function CreatePersonaje() {
   const currentClass = CLASES.find(c => c.value === formData.clase);
   const defaultSkills = currentClass?.defaultSkills || [];
 
+
+  //Funcion que escucha los cambios en el form
   const handleChange = (e: { target: { name: any; value: any; type: any; }; }) => {
     const { name, value, type } = e.target;
     //sync traumaRes with clase
@@ -244,6 +246,7 @@ export default function CreatePersonaje() {
       }));
     }
   };
+
 
   //Logica de enviar al back la informacion del form
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -274,6 +277,7 @@ export default function CreatePersonaje() {
     }
   };
 
+
   //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
   const rollDice = () => {
     return Math.floor(Math.random()
@@ -281,7 +285,6 @@ export default function CreatePersonaje() {
   };
 
   // Funciones que manejan las tiradas de dado por cada paso
-
   //Stats = 1d10+1d10+25
   const handleStep2 = () => {
     setFormData((prev) => ({
@@ -292,7 +295,6 @@ export default function CreatePersonaje() {
       combat: rollDice() + rollDice() + 25,
     }))
   };
-
   //Salvaciones = 1d10+1d10+10
   const handleStep3 = () => {
     setFormData((prev) => ({
@@ -302,7 +304,6 @@ export default function CreatePersonaje() {
       cuerpo: rollDice() + rollDice() + 10,
     }))
   };
-
   //Salud = 1d10+10
   const handleStep4 = () => {
     setFormData((prev) => ({
@@ -310,8 +311,6 @@ export default function CreatePersonaje() {
       maxHP: rollDice() + 10,
     }))
   };
-
-
 
 
   //Logica de ajuste de estadisticas (solo mecanico y ciberchaman)
@@ -483,43 +482,46 @@ export default function CreatePersonaje() {
         //Salud maxima, stat adjustment trauma response
         return (
           <>
-            <label className="block mb-4">
-              Salud máxima:
+            <div className="mb-4">
+              <label className="block mb-1">Salud máxima:</label>
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
                 {formData.maxHP}
               </div>
-            </label>
-            <label className="block mb-4">
-              {/* Ajuste de stats buttons -> solo se muestra si la clase es ciberchaman o mecanico*/}
-              {['ciberchaman', 'mecanico'].includes(formData.clase) && (
-                <><div className="block mb-4">Ajuste de stats</div>
+            </div>
 
-                  <div className="grid grid-cols-4 gap-2 mt-2">
-                    {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((nombre) => (
-                      <div key={nombre} className="w-full">
-                        <button
-                          type="button"
-                          onClick={() => handleStatChange(nombre)}
-                          className={`w-full p-2 border transition ${selectedStat === nombre
-                            ? 'bg-red-700 text-white border-red-500'
-                            : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'}`}
-                        >
-                          {nombre}
-                        </button>
-                      </div>
-                    ))}
-                  </div></>
-              )}
-            </label>
+            {['ciberchaman', 'mecanico'].includes(formData.clase) && (
+              //Solo aparecen estos botones para las clases de ciberchaman y mecanico
+              <div className="mb-4">
+                <div className="block mb-2 font-mono">Ajuste de stats</div>
 
-            <label className="block mb-4">
-              Trauma Response:
+                <div className="grid grid-cols-4 gap-2 mt-2">
+                  {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((nombre) => (
+                    <div key={nombre} className="w-full">
+                      <button
+                        type="button"
+                        onClick={() => handleStatChange(nombre)}
+                        className={`w-full p-2 border transition duration-200 ease-in-out ${selectedStat === nombre
+                          ? 'bg-red-700 text-white border-red-500'
+                          : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'
+                          }`}
+                      >
+                        {nombre}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block mb-1">Trauma Response:</label>
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {/* Trauma response depende de la clase */}
+                {/**Busca en el array de trauma_response la que se corresponde con la del form (que se corresponde con la clase) ((es un poco redundante pero ya me da igual la verdad))*/}
                 {TRAUMA_RESPONSE.find((t) => t.value === formData.traumaRes)?.label}
               </div>
-            </label>
+            </div>
           </>
+
         );
       case 5:
         //El fokin SkillTree component que me costó vida y media programar
@@ -633,7 +635,6 @@ export default function CreatePersonaje() {
             </button>
           )}
 
-
           {/* Botón Siguiente */}
           {currentStep !== 6 && (
             <button
@@ -644,7 +645,6 @@ export default function CreatePersonaje() {
               Siguiente
             </button>
           )}
-
 
           {/* Botón de crear solo en el paso 6 */}
           {currentStep === 6 && (
