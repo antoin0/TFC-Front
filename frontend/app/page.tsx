@@ -210,18 +210,22 @@ const INITIAL_FORM_DATA = {
   armorPoints: 0,
   habilidades: [],
   extras: 'Escribe aquí tu parche y tu bagatela, así como cualquier otra información sobre tu personaje',
+  statAdjusted: false,
 };
 
 export default function CreatePersonaje() {
+
   const router = useRouter();
 
   const [currentStep, setCurrentStep] = useState(1);
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+  const [selectedStat, setSelectedStat] = useState<string | null>(null);
 
+
+  const handleChange = (e: { target: { name: any; value: any; type: any; }; }) => {
+    const { name, value, type } = e.target;
     //sync traumaRes with clase
     if (name === 'clase') {
       setFormData((prev) => ({
@@ -239,16 +243,8 @@ export default function CreatePersonaje() {
     }
   };
 
-
-  //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
-  const rollDice = () => {
-    return Math.floor(Math.random()
-      * (10 - 1 + 1)) + 1;
-  };
-
-
   //Logica de enviar al back la informacion del form
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     const payload = {
@@ -276,11 +272,16 @@ export default function CreatePersonaje() {
     }
   };
 
-
+  //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
+  const rollDice = () => {
+    return Math.floor(Math.random()
+      * (10 - 1 + 1)) + 1;
+  };
 
   // Funciones que manejan las tiradas de dado por cada paso
+
+  //Stats = 1d10+1d10+25
   const handleStep2 = () => {
-    //Stats = 1d10+1d10+25
     setFormData((prev) => ({
       ...prev,
       fuerza: rollDice() + rollDice() + 25,
@@ -290,8 +291,8 @@ export default function CreatePersonaje() {
     }))
   };
 
+  //Salvaciones = 1d10+1d10+10
   const handleStep3 = () => {
-    //Salvaciones = 1d10+1d10+10
     setFormData((prev) => ({
       ...prev,
       sanity: rollDice() + rollDice() + 10,
@@ -300,13 +301,35 @@ export default function CreatePersonaje() {
     }))
   };
 
+  //Salud = 1d10+10
   const handleStep4 = () => {
-    //Salud = 1d10+10
     setFormData((prev) => ({
       ...prev,
       maxHP: rollDice() + 10,
     }))
   };
+
+  const handleStatChange = () => {
+    if (formData.statAdjusted) return;
+
+    const selected = selectedStat?.toLowerCase();
+    if (!selected) return;
+
+    let adjustment = 0;
+
+    if (formData.clase === "mecanico") {
+      adjustment = -10;
+    } else if (formData.clase === "ciberchaman") {
+      adjustment = 5;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [selected]: Math.max((prev[selected] || 0) + adjustment, 0),
+      statAdjusted: true,
+    }));
+  };
+
 
 
   //Logica del navbar+contenido de cada paso de creacion
@@ -382,7 +405,7 @@ export default function CreatePersonaje() {
           </>
         );
       case 3:
-        //Salvaciones del personaje (Cordura, miedo, cuerpo)
+        //Salvaciones del personaje (cordura, miedo, cuerpo)
         return (
           <>
             <label className="block mb-4">
@@ -406,7 +429,7 @@ export default function CreatePersonaje() {
           </>
         );
       case 4:
-        //Salud maxima, heridas maximas, estrés, trauma response
+        //Salud maxima, stat adjustment trauma response
         return (
           <>
             <label className="block mb-4">
@@ -416,28 +439,41 @@ export default function CreatePersonaje() {
               </div>
             </label>
             <label className="block mb-4">
-              Heridas máximas:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.maxWounds}
-              </div>
+              {/* Ajuste de stats buttons -> solo se muestra si la clase es ciberchaman o mecanico*/}
+              {['ciberchaman', 'mecanico'].includes(formData.clase) && (
+                <><div className="block mb-4">Ajuste de stats</div><div className="grid grid-cols-4 gap-2 mt-2">
+
+                  {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((label) => (
+                    <div key={label} className="w-full">
+                      <button
+                        type="button"
+                        onClick={() => handleStatChange()}
+                        className={`w-full p-2 border transition ${selectedStat === label
+                          ? 'bg-red-700 text-white border-red-500'
+                          : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'}`}
+                      >
+                        {label}
+                      </button>
+                    </div>
+                  ))}
+                </div></>
+              )}
+
+
             </label>
-            <label className="block mb-4">
-              Estrés:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.stress}
-              </div>
-            </label>
+
             <label className="block mb-4">
               Trauma Response:
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
+                {/* Trauma response depende de la clase */}
                 {TRAUMA_RESPONSE.find((t) => t.value === formData.traumaRes)?.label}
               </div>
             </label>
           </>
         );
       case 5:
+        //El fokin SkillTree component que me costó vida y media programar
         const currentClass = CLASES.find(c => c.value === formData.clase);
-        const tierLimits = currentClass?.tierLimits || { T: 0, E: 0, M: 0 };
         const defaultSkills = currentClass?.defaultSkills || [];
 
         return (
@@ -445,13 +481,13 @@ export default function CreatePersonaje() {
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
             <SkillTreeSimplificado
               skills={SKILLS}
+              maxSelection={currentClass.value === 'ciberchaman' ? 4 : 2}
               selected={formData.habilidades}
-              onChange={(newSkills) =>
+              defaultSkills={defaultSkills}
+              onChange={(newSkills) => {
                 setFormData((prev) => ({ ...prev, habilidades: newSkills }))
               }
-              defaultSkills={defaultSkills}
-              tierLimits={tierLimits}
-            />
+              } />
           </>
         );
 
