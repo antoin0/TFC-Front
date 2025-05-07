@@ -223,6 +223,8 @@ export default function CreatePersonaje() {
 
   const [selectedStat, setSelectedStat] = useState<string | null>(null);
 
+  const currentClass = CLASES.find(c => c.value === formData.clase);
+  const defaultSkills = currentClass?.defaultSkills || [];
 
   const handleChange = (e: { target: { name: any; value: any; type: any; }; }) => {
     const { name, value, type } = e.target;
@@ -309,26 +311,75 @@ export default function CreatePersonaje() {
     }))
   };
 
-  const handleStatChange = () => {
-    if (formData.statAdjusted) return;
 
-    const selected = selectedStat?.toLowerCase();
-    if (!selected) return;
 
-    let adjustment = 0;
 
+  //Logica de ajuste de estadisticas (solo mecanico y ciberchaman)
+  const handleStatChange = (stat: string) => {
+    let ajuste = 0;
     if (formData.clase === "mecanico") {
-      adjustment = -10;
+      ajuste = -10;
     } else if (formData.clase === "ciberchaman") {
-      adjustment = 5;
+      ajuste = 5;
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      [selected]: Math.max((prev[selected] || 0) + adjustment, 0),
-      statAdjusted: true,
-    }));
+    // Si se vuelve a hacer clic en el mismo botón, se deselecciona y se revierte el ajuste
+    if (selectedStat === stat) {
+      switch (stat) {
+        case "Fuerza":
+          formData.fuerza -= ajuste;
+          break;
+        case "Velocidad":
+          formData.velocidad -= ajuste;
+          break;
+        case "Intelecto":
+          formData.intelig -= ajuste;
+          break;
+        case "Combate":
+          formData.combat -= ajuste;
+          break;
+      }
+      setSelectedStat(null);
+      return;
+    }
+
+    // Si ya hay otro stat seleccionado, revertimos ese primero
+    if (selectedStat) {
+      switch (selectedStat) {
+        case "Fuerza":
+          formData.fuerza -= ajuste;
+          break;
+        case "Velocidad":
+          formData.velocidad -= ajuste;
+          break;
+        case "Intelecto":
+          formData.intelig -= ajuste;
+          break;
+        case "Combate":
+          formData.combat -= ajuste;
+          break;
+      }
+    }
+
+    // Aplicamos el nuevo ajuste
+    switch (stat) {
+      case "Fuerza":
+        formData.fuerza += ajuste;
+        break;
+      case "Velocidad":
+        formData.velocidad += ajuste;
+        break;
+      case "Intelecto":
+        formData.intelig += ajuste;
+        break;
+      case "Combate":
+        formData.combat += ajuste;
+        break;
+    }
+
+    setSelectedStat(stat);
   };
+
 
 
 
@@ -441,25 +492,24 @@ export default function CreatePersonaje() {
             <label className="block mb-4">
               {/* Ajuste de stats buttons -> solo se muestra si la clase es ciberchaman o mecanico*/}
               {['ciberchaman', 'mecanico'].includes(formData.clase) && (
-                <><div className="block mb-4">Ajuste de stats</div><div className="grid grid-cols-4 gap-2 mt-2">
+                <><div className="block mb-4">Ajuste de stats</div>
 
-                  {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((label) => (
-                    <div key={label} className="w-full">
-                      <button
-                        type="button"
-                        onClick={() => handleStatChange()}
-                        className={`w-full p-2 border transition ${selectedStat === label
-                          ? 'bg-red-700 text-white border-red-500'
-                          : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'}`}
-                      >
-                        {label}
-                      </button>
-                    </div>
-                  ))}
-                </div></>
+                  <div className="grid grid-cols-4 gap-2 mt-2">
+                    {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((nombre) => (
+                      <div key={nombre} className="w-full">
+                        <button
+                          type="button"
+                          onClick={() => handleStatChange(nombre)}
+                          className={`w-full p-2 border transition ${selectedStat === nombre
+                            ? 'bg-red-700 text-white border-red-500'
+                            : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'}`}
+                        >
+                          {nombre}
+                        </button>
+                      </div>
+                    ))}
+                  </div></>
               )}
-
-
             </label>
 
             <label className="block mb-4">
@@ -473,9 +523,6 @@ export default function CreatePersonaje() {
         );
       case 5:
         //El fokin SkillTree component que me costó vida y media programar
-        const currentClass = CLASES.find(c => c.value === formData.clase);
-        const defaultSkills = currentClass?.defaultSkills || [];
-
         return (
           <>
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
@@ -495,6 +542,7 @@ export default function CreatePersonaje() {
         //Dinero, armadura, extras
         return (
           <>
+            {/**
             <label className="block mb-4">
               Dinero:
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
@@ -507,6 +555,7 @@ export default function CreatePersonaje() {
                 {formData.armorPoints}
               </div>
             </label>
+            */}
             <label className="block mb-4">
               Extras:
               <textarea
