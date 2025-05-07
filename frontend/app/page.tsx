@@ -210,7 +210,6 @@ const INITIAL_FORM_DATA = {
   armorPoints: 0,
   habilidades: [],
   extras: 'Escribe aquí tu parche y tu bagatela, así como cualquier otra información sobre tu personaje',
-  statAdjusted: false,
 };
 
 export default function CreatePersonaje() {
@@ -260,7 +259,7 @@ export default function CreatePersonaje() {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/pejotas/', {
         method: 'POST',
-        body: JSON.stringify(payload), // usa `payload`, no `formData`
+        body: JSON.stringify(payload),
         headers: {
           'Content-Type': 'application/json',
         },
