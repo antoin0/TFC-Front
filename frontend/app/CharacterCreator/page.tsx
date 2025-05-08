@@ -508,7 +508,7 @@ export default function CreatePersonaje() {
         );
       case 5:
         //SkillTree component que me costó vida y media programar
-        //Aparecen errores pero son mentira
+        //Aparecen errores pero son mentira este tio funciona
         return (
           <>
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
@@ -547,7 +547,7 @@ export default function CreatePersonaje() {
 
   return (
 
-    <div className="bg-black text-white font-mono px-6 pb-6 pt-2 max-w-2xl mx-auto border-2 border-red-500">
+    <div className="bg-black text-white font-mono px-6 pb-4 pt-2 max-w-2xl mx-auto border-2 border-red-500">
       <img className="mt-0"
         src="/Demonship_Logo_Full.png"
         alt="Logo principal demonship"
