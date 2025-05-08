@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import router, { useRouter } from 'next/compat/router';
-import SkillTreeSimplificado from './SkillTree/page';
+import SkillTree from './SkillTree/page';
 
 const CLASES = [
   {
@@ -11,6 +11,7 @@ const CLASES = [
     descr:
       '+10 Combate\n+10 Salvación de Cuerpo\n+20 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nAptitud de combate\nAtletismo\nBonus: 1 Expert OR 2 Trained Skills',
     defaultSkills: ['ap_combate', 'atletismo'],
+    traumaResponse: 'Cuando entras en pánico, todo aliado cercano debe hacer una salvación de MIEDO'
   },
   {
     value: 'mecanico',
@@ -18,6 +19,7 @@ const CLASES = [
     descr:
       '+20 Intelecto\n-10 a un atributo\n+60 Salvación de Miedo\n+1 Herida\n+++ Skills +++\nEquipamiento industrial\nChapuzas\nBonus: 1 Expert OR 2 Trained Skills',
     defaultSkills: ['eq_industrial', 'chapuzas', 'arqueologia'],
+    traumaResponse: 'Los jugadores cercanos a ti tienen desventaja en las salvaciones de MIEDO',
   },
   {
     value: 'ciberchaman',
@@ -25,6 +27,7 @@ const CLASES = [
     descr:
       '+10 Intelecto\n+5 a un atributo\n+30 Salvación de Cordura\n+++ Skills +++\nMaster skill + expert and trained prerequisite skills\nBonus: 1 trained skill',
     defaultSkills: [],
+    traumaResponse: 'Cuando fallas una salvación de cordura, todos los jugadores cercanos ganan 1 ESTRÉS',
   },
   {
     value: 'granjero',
@@ -32,28 +35,11 @@ const CLASES = [
     descr:
       '+5 a todos los atributos\n+10 a todas las salvaciones\n+++ Skills +++\nEquipamiento industrial\nPatologia\nBonus: 1 Expert 1 Trained skill',
     defaultSkills: ['eq_industrial', 'patologia'],
+    traumaResponse: 'Una vez por sesión, puedes tener ventaja en un check de PÁNICO',
   },
 ];
 
-const TRAUMA_RESPONSE = [
-  {
-    value: 'stalker',
-    label: 'Cuando entras en pánico, todo aliado cercano debe hacer una salvación de MIEDO'
-  },
-  {
-    value: 'mecanico',
-    label: 'Los jugadores cercanos a ti tienen desventaja en las salvaciones de MIEDO',
-  },
-  {
-    value: 'ciberchaman',
-    label: 'Cuando fallas una salvación de cordura, todos los jugadores cercanos ganan 1 ESTRÉS',
-  },
-  {
-    value: 'granjero',
-    label: 'Una vez por sesión, puedes tener ventaja en un check de PÁNICO',
-  },
-];
-
+//Array de skills con su prerequisito (en forma de array)
 const SKILLS = [
   {
     value: 'cirugia',
@@ -246,7 +232,6 @@ export default function CreatePersonaje() {
     }
   };
 
-
   //Logica de enviar al back la informacion del form
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -275,7 +260,6 @@ export default function CreatePersonaje() {
       console.error('Error en envío:', error);
     }
   };
-
 
   //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
   const rollDice = () => {
@@ -515,19 +499,20 @@ export default function CreatePersonaje() {
             <div className="mb-4">
               <label className="block mb-1">Trauma Response:</label>
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {/**Busca en el array de trauma_response la que se corresponde con la del form (que se corresponde con la clase) ((es un poco redundante pero ya me da igual la verdad))*/}
-                {TRAUMA_RESPONSE.find((t) => t.value === formData.traumaRes)?.label}
+                {/**Busca en el array de CLASES la traumaResponse que se corresponde con la del form (que se corresponde con la clase) ((es un poco redundante pero ya me da igual la verdad))*/}
+                {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
               </div>
             </div>
           </>
 
         );
       case 5:
-        //El fokin SkillTree component que me costó vida y media programar
+        //SkillTree component que me costó vida y media programar
+        //Aparecen errores pero son mentira
         return (
           <>
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
-            <SkillTreeSimplificado
+            <SkillTree
               skills={SKILLS}
               maxSelection={currentClass.value === 'ciberchaman' ? 4 : 2}
               selected={formData.habilidades}
@@ -540,23 +525,9 @@ export default function CreatePersonaje() {
         );
 
       case 6:
-        //Dinero, armadura, extras
+        //Extras
         return (
           <>
-            {/**
-            <label className="block mb-4">
-              Dinero:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.dinero}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Armor Points:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.armorPoints}
-              </div>
-            </label>
-            */}
             <label className="block mb-4">
               Extras:
               <textarea
