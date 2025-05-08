@@ -10,7 +10,7 @@ interface Skill {
     tier: string;
 }
 
-//Definicion de los props iniciales que tendra el skillTree
+
 interface Props {
     skills: Skill[];
     selected: string[];
@@ -19,7 +19,7 @@ interface Props {
     defaultSkills: string[];
 }
 
-export default function SkillTreeSimplificado({ skills, selected, onChange, maxSelection, defaultSkills }: Props) {
+export default function SkillTree({ skills, selected, onChange, maxSelection, defaultSkills }: Props) {
 
     //Creamos los sets de habilidades -> default (dados por la clase) y userSelected (escogidos por el usuario)
 
@@ -32,7 +32,7 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
         const combined = new Set<string>([...defaultSkillsSet]); //creamos un nuevo Set de string con las predeterminadas, utilizamos ... para convertirlo en array y guardarlo en combined
         userSelectedSet.forEach(val => combined.add(val));  // forEach para iterar por todos las skills userSelected y añadirlas a combined
         return combined;
-    }, [defaultSkillsSet, userSelectedSet]); //El useMemo volvera a ejecutar esta logica solo si cambian el defaulto el UserSelected
+    }, [defaultSkillsSet, userSelectedSet]); //El useMemo volvera a ejecutar esta logica solo si cambian el default o el UserSelected
 
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
 
 
     const toggleSkill = (skill: Skill) => {
-        // prevent unchecking default skills
+        // evita deseleccionar skills predeterminadas
         if (defaultSkillsSet.has(skill.value)) return;
 
         //skill esta en userselected -> se puede quitar i poner
@@ -50,16 +50,16 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
 
         if (isSelected) {
 
-            const updated = new Set(userSelectedSet);
             //updated -> copia del Set (conjunto skills) seleccionadas
+            const updated = new Set(userSelectedSet);
 
+            //Buscamos las habilidades requisito, por ejemplo, si deselecciono una habilidad T prereq de una M, quita la M tambien
             const toRemove = getDependents(skill.value, skills, selectedSet);
             toRemove.forEach(val => updated.delete(val));
             updated.delete(skill.value);
-            //Buscamos las habilidades requisito, por ejemplo, si deselecciono una habilidad T prereq de una M, quita la M tambien
 
-            setUserSelectedSet(updated);
             //updateamos estado de userSelected -> le pasamos el set nuevo que creamos antes
+            setUserSelectedSet(updated);
             setErrorMessage(null);
 
             //onChange-> notifica el cambio
@@ -91,11 +91,9 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
                 if (current.has(skill.value) && skill.prerq.includes(currentSkill) && !dependents.has(skill.value)) {
                     dependents.add(skill.value);
                     queue.push(skill.value);
-                    //Basicamente -> "conectamos" las skills (hacemos una cola) de forma que
-                    // A depende de B,
-                    // B depende de C
-                    // (C no depende de nadie, seria nuestra habilidad de tier minimo).
-                    // Entonces, si quitamos C, automaticamente se quitan B y A
+                    {/** Basicamente -> "conectamos" las skills (hacemos una cola) de forma que A depende de B,
+                        B depende de C, C no depende de nadie, seria nuestra habilidad de tier minimo.
+                        Entonces, si quitamos C, automaticamente se quitan B y A    */}
                 }
             }
         }
@@ -111,7 +109,7 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
             )}
             {TIERS.map((tier) => (
                 <div key={tier}>
-                    <h3 className="font-bold text-red-400">Tier {tier}</h3>
+                    <h3 className="font-bold text-red-400 font-mono">Tier {tier}</h3>
                     <div className="grid grid-cols-2 gap-2 mt-2">
                         {skills
                             .filter((s) => s.tier === tier)
@@ -129,8 +127,8 @@ export default function SkillTreeSimplificado({ skills, selected, onChange, maxS
                                         key={skill.value}
                                         onClick={() => !isDefault && toggleSkill(skill)}
                                         disabled={locked || isDefault}
-                                        className={`p-2 border rounded text-left ${isDefault
-                                            //color  skill predeterminada
+                                        className={`p-2 border rounded text-left font-mono ${isDefault
+                                            //color skill predeterminada
                                             ? 'bg-red-950 text-white border-black cursor-not-allowed'
                                             : isSelected
                                                 //color skill seleccionada
