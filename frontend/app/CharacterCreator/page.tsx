@@ -397,7 +397,10 @@ export default function CreatePersonaje() {
                   <button
                     key={c.value}
                     type="button"
-                    onClick={() => handleChange({ target: { name: "clase", value: c.value } })}
+                    onClick={() => handleChange({ target: {
+                      name: "clase", value: c.value,
+                      type: undefined
+                    } })}
                     className={`p-2 border w-full ${formData.clase === c.value
                       ? "bg-red-500 text-black"
                       : "bg-black text-white border-red-500"
