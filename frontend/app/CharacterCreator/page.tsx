@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react';
-import router, { useRouter } from 'next/compat/router';
+import { useRouter } from 'next/navigation';
 import SkillTree from '../SkillTree/page';
 
 const CLASES = [
@@ -232,7 +232,7 @@ export default function CreatePersonaje() {
     }
   };
 
-  //Logica de enviar al back la informacion del form
+  //Logica de enviar al back la informacion del form (El personaje)
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
@@ -242,6 +242,7 @@ export default function CreatePersonaje() {
     };
 
     try {
+      //Mandamos el personaje al back de django
       const res = await fetch('http://127.0.0.1:8000/api/pejotas/', {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -250,13 +251,18 @@ export default function CreatePersonaje() {
         },
       });
 
+      //Si el personaje fue creado con exito, llevamos al usuario al visualizador (WIP)
       if (res.ok) {
-        router.push('/api/pejotas/');
+        router.push('/CharacterVisualizer/');
       } else {
+        let href = '/CharacterVisualizer'
         console.error(payload);
+        router.push(href);
         console.error('Error al crear personaje');
       }
     } catch (error) {
+      let href = '/CharacterVisualizer'
+      router.push(href);
       console.error('Error en envío:', error);
     }
   };
@@ -499,7 +505,7 @@ export default function CreatePersonaje() {
             <div className="mb-4">
               <label className="block mb-1">Trauma Response:</label>
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {/**Busca en el array de CLASES la traumaResponse que se corresponde con la del form (que se corresponde con la clase) ((es un poco redundante pero ya me da igual la verdad))*/}
+                {/**Busca en el array de CLASES la traumaResponse que se corresponde con la del form*/}
                 {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
               </div>
             </div>
@@ -514,6 +520,7 @@ export default function CreatePersonaje() {
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
             <SkillTree
               skills={SKILLS}
+              //currentClass NUNCA es undefined porque pre-seleccionamos una inicial siempre (cuando se carga el)
               maxSelection={currentClass.value === 'ciberchaman' ? 4 : 2}
               selected={formData.habilidades}
               defaultSkills={defaultSkills}
