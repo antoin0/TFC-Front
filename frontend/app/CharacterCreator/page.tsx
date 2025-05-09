@@ -195,7 +195,7 @@ const INITIAL_FORM_DATA = {
   dinero: 0,
   armorPoints: 0,
   habilidades: [],
-  extras: 'Escribe aquí tu parche y tu bagatela, así como cualquier otra información sobre tu personaje',
+  extras: 'Describe aquí tu parche y tu bagatela, así como cualquier otra información sobre tu personaje',
 };
 
 export default function CreatePersonaje() {
@@ -392,19 +392,23 @@ export default function CreatePersonaje() {
             </label>
             <label className="block mb-4">
               Clase:
-              <select
-                name="clase"
-                value={formData.clase}
-                onChange={handleChange}
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
-              >
+              <div className="flex gap-2 mt-1">
                 {CLASES.map((c) => (
-                  <option key={c.value} value={c.value}>
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => handleChange({ target: { name: "clase", value: c.value } })}
+                    className={`p-2 border w-full ${formData.clase === c.value
+                      ? "bg-red-500 text-black"
+                      : "bg-black text-white border-red-500"
+                      }`}
+                  >
                     {c.label}
-                  </option>
+                  </button>
                 ))}
-              </select>
+              </div>
             </label>
+
             <label className="block mb-4">
               Información de la clase:
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full whitespace-pre-line rounded min-h-[3rem]">
@@ -520,7 +524,7 @@ export default function CreatePersonaje() {
             <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
             <SkillTree
               skills={SKILLS}
-              //currentClass NUNCA es undefined porque pre-seleccionamos una inicial siempre (cuando se carga el)
+              //currentClass NUNCA es undefined porque pre-seleccionamos una inicial siempre (cuando se carga el forn)
               maxSelection={currentClass.value === 'ciberchaman' ? 4 : 2}
               selected={formData.habilidades}
               defaultSkills={defaultSkills}
@@ -554,6 +558,8 @@ export default function CreatePersonaje() {
 
   return (
 
+
+    //Encabezado
     <div className="bg-black text-white font-mono px-6 pb-4 pt-2 max-w-2xl mx-auto border-2 border-red-500">
       <img className="mt-0"
         src="/Demonship_Logo_Full.png"
@@ -568,7 +574,7 @@ export default function CreatePersonaje() {
           <button
             key={step}
             onClick={() => setCurrentStep(Number(step))}
-            className={`py-2 px-4 border ${currentStep === Number(step) ? 'bg-red-500 text-black' : 'bg-black text-white'}`}
+            className={`py-2 px-4 border ${currentStep === Number(step) ? 'bg-red-500 text-black' : 'bg-black text-white border-red-500'}`}
           >
             Paso {step}
           </button>
