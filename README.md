@@ -4,13 +4,6 @@
 
 _DemonShipRPGCC es una aplicacion web que permite a los jugadores de este sistema de rol crear sus personajes rapida y comodamente, ahorrando asi tiempo de la tarde que se puede dedicar a la partida_
 
-## Comenzando 🚀
-
-_Utiliza pnpm -i para la instalacion del proyecto.
-Asimismo, instalará dependencias cuando lances "npm run dev" por primera vez para arrancar el proyecto_
-
-Mira **Deployment** para conocer como desplegar el proyecto.
-
 
 ### Pre-requisitos 📋
 
