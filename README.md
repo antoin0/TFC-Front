@@ -30,19 +30,16 @@ npm run dev
 
 ## Despliegue 📦
 
-_Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviaran al backend, que está en otro repositorio_
+_Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviaran a otro proyecto distinto, que está en otro repositorio_
 _Para que esta aplicacion escriba en base de datos debes descargarte [este repo](https://github.com/antoin0/TFC-Back)_
 
 
 ## Construido con 🛠️
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
-
 * [NextJS](https://nextjs.org/) - El framework web usado (REACT)
 * [PNPM](https://pnpm.io/es/) - Manejador de dependencias
 * [TailWindCSS](https://tailwindcss.com/) - Usado para el CSS responsive
 * [Django](https://www.djangoproject.com/) - Backend 
-
 
 
 ## Autor ✒️
@@ -52,4 +49,4 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 
 ## Licencia 📄
 
-Este proyecto está bajo la Licencia Mia Propia que definitivamente tengo
+Este proyecto está bajo la Licencia Mia Propia (LMP) que definitivamente tengo
