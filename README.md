@@ -34,9 +34,7 @@ _Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en
 
 _Para que esta aplicacion escriba en base de datos debes descargarte [este repo](https://github.com/antoin0/TFC-Back)_
 
-⚠️AVISO⚠️ _La pagina que está mas desarrollada NO es la que se encuentra en "/" es la de "/CharacterCreator"_
-
-
+⚠️AVISO⚠️ La pagina que está mas desarrollada NO es la que se encuentra en "/" es la de "/CharacterCreator"
 
 
 ## Construido con 🛠️
