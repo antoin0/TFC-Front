@@ -18,7 +18,7 @@ _Para instalar este proyecto:_
 _Lanzamos pnpm install para instalar las dependencias descritas en pacakge.lock_
 
 ```
-pnpm -i
+pnpm install
 ```
 
 _Despues, para que nextjs instale el resto de componentes necesarios:_
