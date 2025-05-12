@@ -1,8 +1,10 @@
 ![Demonship_Logo_Full](https://github.com/user-attachments/assets/07e1ab5f-af7b-4f53-af32-c72e7abfbb0f)
-# DemonShip RPG Character Creator
+# Demonship RPG Character Creator
 
 
-_DemonShipRPGCC es una aplicacion web que permite a los jugadores de este sistema de rol crear sus personajes rapida y comodamente, ahorrando asi tiempo de la tarde que se puede dedicar a la partida_
+_DemonshipRPGCC es una aplicacion web que permite a los jugadores de este sistema de rol crear sus personajes rápida y comodamente
+
+_El objetivo principal de la aplicación es reducir el tiempo que se le dedica a la creación de personajes, dando así más tiempo a los jugadores para disfrutar de la partida_
 
 
 ### Pre-requisitos 📋
@@ -20,8 +22,6 @@ _Lanzamos pnpm install para instalar las dependencias descritas en pacakge.lock_
 pnpm -i
 ```
 
-_
-
 _Despues, para que nextjs instale el resto de componentes necesarios:_
 
 ```
@@ -34,6 +34,7 @@ npm run dev
 _Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviaran al backend, que está en otro repositorio_
 _Para que esta aplicacion escriba en base de datos debes descargarte [este repo](https://github.com/antoin0/TFC-Back)_
 
+
 ## Construido con 🛠️
 
 _Menciona las herramientas que utilizaste para crear tu proyecto_
@@ -43,15 +44,13 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 * [TailWindCSS](https://tailwindcss.com/) - Usado para el CSS responsive
 * [Django](https://www.djangoproject.com/) - Backend 
 
+
+
 ## Autor ✒️
 
-* **Anton Espiñeira*** - [github](https://github.com/antoin0)
+* **Anton Espiñeira** - [github](https://github.com/antoin0)
 
 
 ## Licencia 📄
 
 Este proyecto está bajo la Licencia Mia Propia que definitivamente tengo
-
-
----
-⌨️ con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
