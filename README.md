@@ -38,7 +38,7 @@ _Para que esta aplicacion escriba en base de datos debes descargarte [este repo]
 
 * [NextJS](https://nextjs.org/) - El framework web usado (REACT)
 * [PNPM](https://pnpm.io/es/) - Manejador de dependencias
-* [TailWindCSS](https://tailwindcss.com/) - Usado para el CSS responsive
+* [TailwindCSS](https://tailwindcss.com/) - Usado para el CSS responsive
 * [Django](https://www.djangoproject.com/) - Backend 
 
 
