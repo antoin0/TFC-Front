@@ -13,7 +13,7 @@ _Ordenador y navegador posterior a 2010_
 
 ### Instalación 🔧
 
-_Para instalar este proyecto junto a sus dependencias:_
+_Para instalar este proyecto:_
 
 _Lanzamos pnpm install para instalar las dependencias descritas en pacakge.lock_
 
