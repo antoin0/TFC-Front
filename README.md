@@ -47,7 +47,7 @@ _Para que esta aplicacion escriba en base de datos debes descargarte [este repo]
 
 ## Autor ✒️
 
-* **Anton Espiñeira** - [github](https://github.com/antoin0)
+* **[Anton Espiñeira](https://github.com/antoin0)** 
 
 
 ## Licencia 📄
