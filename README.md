@@ -31,6 +31,7 @@ npm run dev
 ## Despliegue 📦
 
 _Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviaran a otro proyecto distinto, que está en otro repositorio_
+
 _Para que esta aplicacion escriba en base de datos debes descargarte [este repo](https://github.com/antoin0/TFC-Back)_
 
 ⚠️AVISO⚠️ _La pagina que está mas desarrollada NO es la que se encuentra en "/" es la de "/CharacterCreator"_
