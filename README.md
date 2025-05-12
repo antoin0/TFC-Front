@@ -4,8 +4,7 @@
 
 _DemonshipRPGCC es una aplicacion web que permite a los jugadores de este sistema de rol crear sus personajes rápida y comodamente_
 
-_El objetivo principal de la aplicación es reducir el tiempo que se le dedica a la creación de personajes, dando así más tiempo a los jugadores para disfrutar de la partida_
-
+_El objetivo principal es reducir el tiempo que se le dedica a la creación de personajes, dando así más tiempo a los jugadores para disfrutar de la partida_
 
 ### Pre-requisitos 📋
 
