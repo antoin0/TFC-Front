@@ -206,7 +206,7 @@ export default function CreatePersonaje() {
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-  const [selectedStat, setSelectedStat] = useState<string | null>(null);
+  const [selectedStat, setSelectedStat] = useState<string | null>('Fuerza');
 
   const currentClass = CLASES.find(c => c.value === formData.clase);
   const defaultSkills = currentClass?.defaultSkills || [];
@@ -231,6 +231,7 @@ export default function CreatePersonaje() {
       }));
     }
   };
+
 
   //Logica de enviar al back la informacion del form (El personaje)
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -261,17 +262,19 @@ export default function CreatePersonaje() {
         console.error('Error al crear personaje');
       }
     } catch (error) {
-      let href = '/CharacterVisualizer'
+      let href = '/CharacterVisualizer' //redirigir a pagina de error
       router.push(href);
       console.error('Error en envío:', error);
     }
   };
+
 
   //Funcion que devuelve un numero aleatorio entre 1 y 10 (simula tirada de 1d10)
   const rollDice = () => {
     return Math.floor(Math.random()
       * (10 - 1 + 1)) + 1;
   };
+
 
   // Funciones que manejan las tiradas de dado por cada paso
   //Stats = 1d10+1d10+25
@@ -284,6 +287,7 @@ export default function CreatePersonaje() {
       combat: rollDice() + rollDice() + 25,
     }))
   };
+
   //Salvaciones = 1d10+1d10+10
   const handleStep3 = () => {
     setFormData((prev) => ({
@@ -293,6 +297,7 @@ export default function CreatePersonaje() {
       cuerpo: rollDice() + rollDice() + 10,
     }))
   };
+
   //Salud = 1d10+10
   const handleStep4 = () => {
     setFormData((prev) => ({
@@ -309,6 +314,9 @@ export default function CreatePersonaje() {
       ajuste = -10;
     } else if (formData.clase === "ciberchaman") {
       ajuste = 5;
+    }
+    else {
+      ajuste = 0; //Previene que quede marcado y despues un jugador cambie su clase
     }
 
     // Si se vuelve a hacer clic en el mismo botón, se deselecciona y se revierte el ajuste
@@ -330,6 +338,7 @@ export default function CreatePersonaje() {
       setSelectedStat(null);
       return;
     }
+
 
     // Si ya hay otro stat seleccionado, revertimos ese primero
     if (selectedStat) {
@@ -397,11 +406,13 @@ export default function CreatePersonaje() {
                   <button
                     key={c.value}
                     type="button"
-                    onClick={() => handleChange({ target: {
-                      name: "clase", value: c.value,
-                      type: undefined
-                    } })}
-                    className={`p-2 border w-full ${formData.clase === c.value
+                    onClick={() => handleChange({
+                      target: {
+                        name: "clase", value: c.value,
+                        type: undefined
+                      }
+                    })}
+                    className={`p-2 border w-full  ${formData.clase === c.value
                       ? "bg-red-500 text-black"
                       : "bg-black text-white border-red-500"
                       }`}
@@ -414,7 +425,7 @@ export default function CreatePersonaje() {
 
             <label className="block mb-4">
               Información de la clase:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full whitespace-pre-line rounded min-h-[3rem]">
+              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full whitespace-pre-line rounded min-h-[3rem] ">
                 {claseFocus?.descr || ''}
               </div>
             </label>
@@ -491,17 +502,17 @@ export default function CreatePersonaje() {
                 <div className="block mb-2 font-mono">Ajuste de stats</div>
 
                 <div className="grid grid-cols-4 gap-2 mt-2">
-                  {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((nombre) => (
-                    <div key={nombre} className="w-full">
+                  {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((stat) => (
+                    <div key={stat} className="w-full">
                       <button
                         type="button"
-                        onClick={() => handleStatChange(nombre)}
-                        className={`w-full p-2 border transition duration-200 ease-in-out ${selectedStat === nombre
+                        onClick={() => handleStatChange(stat)}
+                        className={`w-full p-2 border transition duration-200 ease-in-out ${selectedStat === stat
                           ? 'bg-red-700 text-white border-red-500'
                           : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'
                           }`}
                       >
-                        {nombre}
+                        {stat}
                       </button>
                     </div>
                   ))}
@@ -568,6 +579,8 @@ export default function CreatePersonaje() {
         src="/Demonship_Logo_Full.png"
         alt="Logo principal demonship"
       />
+      {/**Fondo */}
+      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
 
       <h1 className="text-red-500 text-3xl uppercase border-b-2 border-red-500 pb-2 mb-6"></h1>
 
@@ -577,7 +590,7 @@ export default function CreatePersonaje() {
           <button
             key={step}
             onClick={() => setCurrentStep(Number(step))}
-            className={`py-2 px-4 border ${currentStep === Number(step) ? 'bg-red-500 text-black' : 'bg-black text-white border-red-500'}`}
+            className={`py-2 px-4 border ${currentStep === Number(step) ? 'bg-red-500 text-black ' : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black transition duration-200'}`}
           >
             Paso {step}
           </button>
