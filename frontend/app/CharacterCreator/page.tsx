@@ -206,7 +206,7 @@ export default function CreatePersonaje() {
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-  const [selectedStat, setSelectedStat] = useState<string | null>('Fuerza');
+  const [selectedStat, setSelectedStat] = useState<string | null>();
 
   const currentClass = CLASES.find(c => c.value === formData.clase);
   const defaultSkills = currentClass?.defaultSkills || [];
@@ -239,7 +239,7 @@ export default function CreatePersonaje() {
 
     const payload = {
       ...formData,
-      habilidades: JSON.stringify(formData.habilidades), // convierte el array en string
+      habilidades: JSON.stringify(formData.habilidades), // convierte el array en string (JSON)
     };
 
     try {
@@ -399,8 +399,8 @@ export default function CreatePersonaje() {
                 className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
               />
             </label>
+            Clase:
             <label className="block mb-4">
-              Clase:
               <div className="flex gap-2 mt-1">
                 {CLASES.map((c) => (
                   <button
@@ -414,7 +414,7 @@ export default function CreatePersonaje() {
                     })}
                     className={`p-2 border w-full  ${formData.clase === c.value
                       ? "bg-red-500 text-black"
-                      : "bg-black text-white border-red-500"
+                      : "bg-black text-white border-red-500 "
                       }`}
                   >
                     {c.label}
@@ -500,7 +500,6 @@ export default function CreatePersonaje() {
               //Solo aparecen estos botones para las clases de ciberchaman y mecanico
               <div className="mb-4">
                 <div className="block mb-2 font-mono">Ajuste de stats</div>
-
                 <div className="grid grid-cols-4 gap-2 mt-2">
                   {["Fuerza", "Velocidad", "Intelecto", "Combate"].map((stat) => (
                     <div key={stat} className="w-full">
@@ -508,8 +507,8 @@ export default function CreatePersonaje() {
                         type="button"
                         onClick={() => handleStatChange(stat)}
                         className={`w-full p-2 border transition duration-200 ease-in-out ${selectedStat === stat
-                          ? 'bg-red-700 text-white border-red-500'
-                          : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black'
+                          ? 'bg-red-500 text-black'
+                          : 'bg-black text-white border-red-500'
                           }`}
                       >
                         {stat}
@@ -528,7 +527,6 @@ export default function CreatePersonaje() {
               </div>
             </div>
           </>
-
         );
       case 5:
         //SkillTree component que me costó vida y media programar
@@ -618,6 +616,7 @@ export default function CreatePersonaje() {
           {currentStep !== 1 && currentStep !== 6 && currentStep !== 5 && (
             <button
               type="button"
+
               onClick={() => {
                 // Llamar a la función adecuada dependiendo del paso (influye en el calculo)
                 switch (currentStep) {

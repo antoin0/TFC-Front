@@ -28,6 +28,7 @@ export default function SkillTree({ skills, selected, onChange, maxSelection, de
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     // Combine default + user selected skills
+    //useMemo para calcular cuando cambiemos la clase directamente y asi ya tendrá las default skills marcadas
     const selectedSet = useMemo(() => {
         const combined = new Set<string>([...defaultSkillsSet]); //creamos un nuevo Set de string con las predeterminadas, utilizamos ... para convertirlo en array y guardarlo en combined
         userSelectedSet.forEach(val => combined.add(val));  // forEach para iterar por todos las skills userSelected y añadirlas a combined
@@ -79,6 +80,7 @@ export default function SkillTree({ skills, selected, onChange, maxSelection, de
             onChange(Array.from(updated));
         }
     };
+
     //getDependents -> quitar una habilidad elimina tambien las que dependan de ella
     const getDependents = (value: string, allSkills: Skill[], current: Set<string>) => {
         const dependents = new Set<string>();
@@ -103,13 +105,13 @@ export default function SkillTree({ skills, selected, onChange, maxSelection, de
     return (
         <div className="space-y-6">
             {errorMessage && (
-                <div className="text-red-400 font-semibold bg- border border-red-500 p-2 rounded">
+                <div className="text-red-500 font-semibold bg- border border-red-500 p-2 rounded">
                     {errorMessage}
                 </div>
             )}
             {TIERS.map((tier) => (
                 <div key={tier}>
-                    <h3 className="font-bold text-red-400 font-mono">Tier {tier}</h3>
+                    <h3 className="font-bold text-red-500 font-mono">Tier {tier}</h3>
                     <div className="grid grid-cols-2 gap-2 mt-2">
                         {skills
                             .filter((s) => s.tier === tier)
@@ -127,16 +129,16 @@ export default function SkillTree({ skills, selected, onChange, maxSelection, de
                                         key={skill.value}
                                         onClick={() => !isDefault && toggleSkill(skill)}
                                         disabled={locked || isDefault}
-                                        className={`p-2 border rounded text-left font-mono ${isDefault
+                                        className={`p-2 border rounded text-left font-mono  ${isDefault
                                             //color skill predeterminada
                                             ? 'bg-red-950 text-white border-black cursor-not-allowed'
                                             : isSelected
                                                 //color skill seleccionada
-                                                ? 'bg-red-600 text-white border-black'
+                                                ? 'bg-red-500 text-black border-black '
                                                 : locked
                                                     //color skill bloqueada / no seleccionada
                                                     ? 'bg-gray-800 text-gray-400 border-gray-500 cursor-not-allowed'
-                                                    : 'bg-black text-white border-red-500'
+                                                    : 'bg-black text-white border-red-500 hover:bg-red-500 hover:text-black transition duration-200'
                                             }`}
                                     >
                                         {skill.label}
