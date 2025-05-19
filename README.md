@@ -12,15 +12,10 @@ _Ordenador y navegador posterior a 2010_
 _Node.js_
 _Npm o pnpm_
 
-
 ### Instalación 🔧
 
 _Para instalar este proyecto:_
-
-
-
-_Lanzamos npm install para instalar las dependencias descritas en pacakge.lock_
-_Debemos lanzar este comando desde TFC-Front/frontend/_
+_Primero debemos lanzar este comando desde TFC-Front/frontend/_
 
 ```
 npm install next@latest react@latest react-dom@latest
