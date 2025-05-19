@@ -4,6 +4,8 @@
 
 _DemonshipRPGCC es una aplicacion web que permite a los jugadores de este sistema de rol crear sus personajes rápida y comodamente_
 
+_Para ver la hoja del juego [click aqui](https://cdn.shopify.com/s/files/1/0022/2727/3817/files/Mothership_1E_-_Advanced_Character_Sheet_Outlined.pdf?v=1713673196)_
+
 _El objetivo principal es reducir el tiempo que se le dedica a la creación de personajes, dando así más tiempo a los jugadores para disfrutar de la partida_
 
 ### Pre-requisitos 📋
