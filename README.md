@@ -9,24 +9,28 @@ _El objetivo principal es reducir el tiempo que se le dedica a la creación de p
 ### Pre-requisitos 📋
 
 _Ordenador y navegador posterior a 2010_
+_Node.js_
+_Npm o pnpm_
 
 
 ### Instalación 🔧
 
 _Para instalar este proyecto:_
 
-_Lanzamos pnpm install para instalar las dependencias descritas en pacakge.lock_
+
+
+_Lanzamos npm install para instalar las dependencias descritas en pacakge.lock_
+_Debemos lanzar este comando desde TFC-Front/frontend/_
 
 ```
-pnpm install
+npm install next@latest react@latest react-dom@latest
 ```
 
-_Despues, para que nextjs instale el resto de componentes necesarios:_
+_Despues, para que nextjs instale el resto de componentes necesarios y arranque el front:_
 
 ```
 npm run dev
 ```
-
 
 ## Despliegue 📦
 
