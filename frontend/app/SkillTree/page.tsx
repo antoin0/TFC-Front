@@ -103,7 +103,7 @@ export default function SkillTree({ skills, selected, onChange, maxSelection, de
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 text-xl">
             {errorMessage && (
                 <div className="text-red-500 font-semibold bg- border border-red-500 p-2 rounded">
                     {errorMessage}
