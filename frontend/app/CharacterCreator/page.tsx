@@ -252,17 +252,19 @@ export default function CreatePersonaje() {
         },
       });
 
-      //Si el personaje fue creado con exito, llevamos al usuario al visualizador (WIP)
+      //Si el personaje fue creado con exito, llevamos al usuario al visualizador
       if (res.ok) {
         router.push('/CharacterVisualizer/');
       } else {
-        let href = '/CharacterVisualizer'
+        setFormData(INITIAL_FORM_DATA)
+        let href = '/' //redirigir a pagina inicial
         console.error(payload);
         router.push(href);
         console.error('Error al crear personaje');
       }
     } catch (error) {
-      let href = '/CharacterVisualizer' //redirigir a pagina de error
+      setFormData(INITIAL_FORM_DATA)
+      let href = '/' //redirigir a pagina inicial
       router.push(href);
       console.error('Error en envío:', error);
     }
@@ -388,42 +390,40 @@ export default function CreatePersonaje() {
         const claseFocus = CLASES.find(c => c.value === formData.clase)
         return (
           <>
-            <label className="block mb-4 w-full">
-              Nombre:
+            <label className="block mb-4 w-full text-xl">
+              Nombre
               <input
                 type="text"
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleChange}
                 required
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full"
+                className="bg-black text-white border border-red-500 p-2 mt-2 mb-5 w-full text-xl"
               />
             </label>
-            Clase:
-            <label className="block mb-4">
-              <div className="flex gap-2 mt-1">
-                {CLASES.map((c) => (
-                  <button
-                    key={c.value}
-                    type="button"
-                    onClick={() => handleChange({
-                      target: {
-                        name: "clase", value: c.value,
-                        type: undefined
-                      }
-                    })}
-                    className={`p-2 border w-full  ${formData.clase === c.value
-                      ? "bg-red-500 text-black"
-                      : "bg-black text-white border-red-500 "
-                      }`}
-                  >
-                    {c.label}
-                  </button>
-                ))}
-              </div>
-            </label>
+            <span className='font-mono text-xl'>Clase</span>
+            <div className="flex gap-2 mt-2 text-xl">
+              {CLASES.map((c) => (
+                <button
+                  key={c.value}
+                  type="button"
+                  onClick={() => handleChange({
+                    target: {
+                      name: "clase", value: c.value,
+                      type: undefined
+                    }
+                  })}
+                  className={`p-2 border w-full  ${formData.clase === c.value
+                    ? "bg-red-500 text-black"
+                    : "bg-black text-white border-red-500 "
+                    }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
 
-            <label className="block mb-4">
+            <label className="block mb-4 mt-5 text-xl">
               Información de la clase:
               <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full whitespace-pre-line rounded min-h-[3rem] ">
                 {claseFocus?.descr || ''}
@@ -435,28 +435,28 @@ export default function CreatePersonaje() {
         // Estadísticas del personaje (Fuerza, velocidad, inteligencia y combate)
         return (
           <>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 text-xl">
               <label className="block text-center">
                 Fuerza
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.fuerza}
                 </div>
               </label>
               <label className="block text-center">
                 Velocidad
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.velocidad}
                 </div>
               </label>
               <label className="block text-center">
                 Inteligencia
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.intelig}
                 </div>
               </label>
               <label className="block text-center">
                 Combate
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.combat}
                 </div>
               </label>
@@ -467,22 +467,22 @@ export default function CreatePersonaje() {
         // Salvaciones del personaje (cordura, miedo, cuerpo)
         return (
           <>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 text-xl">
               <label className="block text-center">
                 Cordura
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.sanity}
                 </div>
               </label>
               <label className="block text-center">
                 Miedo
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.fear}
                 </div>
               </label>
               <label className="block text-center">
                 Cuerpo
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.cuerpo}
                 </div>
               </label>
@@ -493,16 +493,16 @@ export default function CreatePersonaje() {
         // Salud maxima, trauma response, ajuste de stats
         return (
           <>
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-3 gap-4 mb-4 text-xl">
               <div className="text-center col-span-1">
                 <label className="block">Salud máxima</label>
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-5xl mx-auto">
                   {formData.maxHP}
                 </div>
               </div>
 
               <div className="col-span-2">
-                <label className="block text-center">Trauma Response</label>
+                <label className="block text-center mb-3">Trauma Response</label>
                 <div className="bg-black text-red-500 border border-red-500 p-2 mt-1 w-full text-center text-xl">
                   {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
                 </div>
@@ -539,7 +539,7 @@ export default function CreatePersonaje() {
         //Aparecen errores pero son mentira este tio funciona
         return (
           <>
-            <h2 className="text-lg font-mono mb-2 mt-6">Escoge habilidades</h2>
+            <h2 className="font-mono mb-2 mt-6 text-xl">Escoge habilidades</h2>
             <SkillTree
               skills={SKILLS}
               //currentClass NUNCA es undefined porque pre-seleccionamos una inicial siempre (cuando se carga el forn)
@@ -557,14 +557,14 @@ export default function CreatePersonaje() {
         //Extras
         return (
           <>
-            <label className="block mb-4">
+            <label className="block mb-4 text-2xl">
               Extras:
               <textarea
                 name="extras"
                 maxLength={500}
                 value={formData.extras}
                 onChange={handleChange}
-                className="bg-black text-white border border-red-500 p-2 mt-1 w-full h-32"
+                className="bg-black text-white border border-red-500 p-2 mt-1 w-full h-32 text-xl"
               />
             </label>
           </>
@@ -577,7 +577,7 @@ export default function CreatePersonaje() {
   return (
 
     //Encabezado logo
-    <div className="bg-black text-white font-mono px-6 pb-4 pt-2 max-w-2xl mx-auto border-2 border-red-500">
+    <div className="bg-black text-white font-mono px-6 pb-4 pt-2 max-w-200 mx-auto">
       <img className="mt-0"
         src="/Demonship_Logo_Full.png"
         alt="Logo principal demonship"
@@ -605,7 +605,7 @@ export default function CreatePersonaje() {
         {renderStep()}
 
         {/* Contenedor de los botones anterior/siguiente/crear */}
-        <div className="flex space-x-4 mt-6">
+        <div className="flex space-x-4 mt-12 text-xl">
           {/* Botón Anterior */}
           {currentStep !== 1 && currentStep !== 6 && (
             <button
