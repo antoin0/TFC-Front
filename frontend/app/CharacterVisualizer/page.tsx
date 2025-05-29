@@ -57,7 +57,8 @@ export default function CharVisualizer() {
     return (
         <div className="font-mono">
             {/* Fondo */}
-            <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
+            <div className="fixed inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
+
 
             {pejotas.map((pj, index) => {
                 // Encontrar la clase correspondiente y obtener su traumaResponse
@@ -68,42 +69,76 @@ export default function CharVisualizer() {
                     <div key={index} className="bg-black text-red-500 border-2 border-red-500 p-6 m-6 rounded-sm shadow-md max-w-5xl mx-auto tracking-wider">
 
                         <h2 className="text-2xl font-bold uppercase border-b-2 border-red-500 pb-2 mb-6 tracking-widest">
-                            {pj["nombre"]} | {pj["clase"]}
+                            <span className="text-white">{pj["nombre"]}</span> | {pj["clase"]}
                         </h2>
 
                         {/* Atributos principales */}
-                        <div className="grid grid-cols-4 gap-6 mb-6 text-sm">
-                            <div className="border border-red-500 p-2">Fuerza: {pj["fuerza"]}</div>
-                            <div className="border border-red-500 p-2">Velocidad: {pj["velocidad"]}</div>
-                            <div className="border border-red-500 p-2">Intelecto: {pj["intelig"]}</div>
-                            <div className="border border-red-500 p-2">Combate: {pj["combat"]}</div>
-                        </div>
+                        <div className="grid grid-cols-3 gap-x-4 text-sm mb-3">
 
-                        {/* Salvaciones */}
-                        <div className="grid grid-cols-3 gap-6 mb-6 text-sm">
-                            <div className="border border-red-500 p-2">Cordura: {pj["sanity"]}</div>
-                            <div className="border border-red-500 p-2">Miedo: {pj["fear"]}</div>
-                            <div className="border border-red-500 p-2">Cuerpo: {pj["cuerpo"]}</div>
-                        </div>
+                            {/* Atributos principales */}
+                            <div className="flex flex-col gap-3">
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Fuerza:</span>{' '}
+                                    <span className="text-xl">{pj["fuerza"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Velocidad:</span>{' '}
+                                    <span className="text-xl">{pj["velocidad"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Intelecto:</span>{' '}
+                                    <span className="text-xl">{pj["intelig"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Combate:</span>{' '}
+                                    <span className="text-xl">{pj["combat"]}</span>
+                                </div>
+                            </div>
 
-                        {/* Salud y otros stats */}
-                        <div className="grid grid-cols-3 gap-6 mb-6 text-sm">
-                            <div className="border border-red-500 p-2">HP Máx: {pj["maxHP"]}</div>
-                            <div className="border border-red-500 p-2">Heridas Máx: {pj["maxWounds"]}</div>
-                            <div className="border border-red-500 p-2">Stress: {pj["stress"]}</div>
+                            {/* Salvaciones */}
+                            <div className="flex flex-col gap-3 border-l-2 border-red-500 pl-4">
+                                <div className="border border-red-500 p-2 mt-5">
+                                    <span className="text-white text-xl">Cordura:</span>{' '}
+                                    <span className="text-xl">{pj["sanity"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Miedo:</span>{' '}
+                                    <span className="text-xl">{pj["fear"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Cuerpo:</span>{' '}
+                                    <span className="text-xl">{pj["cuerpo"]}</span>
+                                </div>
+                            </div>
+
+                            {/* Salud y otros stats */}
+                            <div className="flex flex-col gap-3 border-l-2 border-red-500 pl-4">
+                                <div className="border border-red-500 p-2 mt-5">
+                                    <span className="text-white text-xl">HP Máx:</span>{' '}
+                                    <span className="text-xl">{pj["maxHP"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Heridas Máx:</span>{' '}
+                                    <span className="text-xl">{pj["maxWounds"]}</span>
+                                </div>
+                                <div className="border border-red-500 p-2">
+                                    <span className="text-white text-xl">Stress:</span>{' '}
+                                    <span className="text-xl">{pj["stress"]}</span>
+                                </div>
+                            </div>
                         </div>
 
                         {/* TraumaRes */}
                         <div className="grid grid-cols-1 gap-6 mb-6 text-sm">
                             <div className="border border-red-500 p-2">
-                                Resistencia al Trauma: {traumaResponse}
+                                <span className="text-white text-xl"> Trauma Response:</span>  <span className="text-xl">{traumaResponse}</span>
                             </div>
                         </div>
 
                         {/* Habilidades */}
                         <div className="mb-6 text-sm">
-                            <div className="uppercase tracking-widest text-red-500">Habilidades:</div>
-                            <ul className="list-disc list-inside pl-4 mt-2 space-y-1 text-red-300">
+                            <div className="uppercase tracking-widest text-white text-xl">Habilidades:</div>
+                            <ul className="list-disc list-inside pl-4 mt-2 space-y-1 text-red-500 text-xl">
                                 {JSON.parse(pj["habilidades"]).map((habilidad: string, idx: number) => (
                                     <li key={idx}>{habilidad}</li>
                                 ))}
@@ -112,8 +147,8 @@ export default function CharVisualizer() {
 
                         {/* Extras */}
                         <div className="mb-2 text-sm">
-                            <div className="uppercase tracking-widest text-red-400">Extras:</div>
-                            <p className="text-red-300 mt-1">{pj["extras"]}</p>
+                            <div className="uppercase tracking-widest text-white text-xl">Extras:</div>
+                            <p className="text-red-500 mt-1 text-xl">{pj["extras"]}</p>
                         </div>
                     </div>
                 );
