@@ -432,73 +432,71 @@ export default function CreatePersonaje() {
           </>
         );
       case 2:
-        //Estadisticas del personaje (Fuerza, velocidad, inteligencia y combate)
+        // Estadísticas del personaje (Fuerza, velocidad, inteligencia y combate)
         return (
           <>
             <div className="grid grid-cols-4 gap-4">
               <label className="block text-center">
                 Fuerza
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.fuerza}
                 </div>
               </label>
               <label className="block text-center">
                 Velocidad
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.velocidad}
                 </div>
               </label>
               <label className="block text-center">
                 Inteligencia
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.intelig}
                 </div>
               </label>
               <label className="block text-center">
                 Combate
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.combat}
                 </div>
               </label>
             </div>
-
           </>
         );
       case 3:
-        //Salvaciones del personaje (cordura, miedo, cuerpo)
+        // Salvaciones del personaje (cordura, miedo, cuerpo)
         return (
           <>
             <div className="grid grid-cols-3 gap-4">
               <label className="block text-center">
                 Cordura
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.sanity}
                 </div>
               </label>
               <label className="block text-center">
                 Miedo
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.fear}
                 </div>
               </label>
               <label className="block text-center">
                 Cuerpo
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.cuerpo}
                 </div>
               </label>
             </div>
-
           </>
         );
       case 4:
-        //Salud maxima, trauma response,  ajuste de stats
+        // Salud maxima, trauma response, ajuste de stats
         return (
           <>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center col-span-1">
                 <label className="block">Salud máxima</label>
-                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
                   {formData.maxHP}
                 </div>
               </div>
@@ -512,7 +510,7 @@ export default function CreatePersonaje() {
             </div>
 
             {['ciberchaman', 'mecanico'].includes(formData.clase) && (
-              //Solo aparecen estos botones para las clases de ciberchaman y mecanico
+              // Solo aparecen estos botones para las clases de ciberchaman y mecanico
               <div className="mb-4">
                 <div className="block mb-2 font-mono">Ajuste de stats</div>
                 <div className="grid grid-cols-4 gap-2 mt-2">
@@ -533,9 +531,9 @@ export default function CreatePersonaje() {
                 </div>
               </div>
             )}
-
           </>
         );
+
       case 5:
         //SkillTree component que me costó vida y media programar
         //Aparecen errores pero son mentira este tio funciona
