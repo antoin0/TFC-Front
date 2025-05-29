@@ -432,72 +432,85 @@ export default function CreatePersonaje() {
           </>
         );
       case 2:
-        //Estadisticas del personaje (Fuerza, velocidad, inteligencia y combate)
+        // Estadísticas del personaje (Fuerza, velocidad, inteligencia y combate)
         return (
           <>
-            <label className="block mb-4">
-              Fuerza:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.fuerza}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Velocidad:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.velocidad}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Inteligencia:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.intelig}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Combate:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.combat}
-              </div>
-            </label>
+            <div className="grid grid-cols-4 gap-4">
+              <label className="block text-center">
+                Fuerza
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.fuerza}
+                </div>
+              </label>
+              <label className="block text-center">
+                Velocidad
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.velocidad}
+                </div>
+              </label>
+              <label className="block text-center">
+                Inteligencia
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.intelig}
+                </div>
+              </label>
+              <label className="block text-center">
+                Combate
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.combat}
+                </div>
+              </label>
+            </div>
           </>
         );
       case 3:
-        //Salvaciones del personaje (cordura, miedo, cuerpo)
+        // Salvaciones del personaje (cordura, miedo, cuerpo)
         return (
           <>
-            <label className="block mb-4">
-              Cordura:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.sanity}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Miedo:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.fear}
-              </div>
-            </label>
-            <label className="block mb-4">
-              Cuerpo:
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.cuerpo}
-              </div>
-            </label>
+            <div className="grid grid-cols-3 gap-4">
+              <label className="block text-center">
+                Cordura
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.sanity}
+                </div>
+              </label>
+              <label className="block text-center">
+                Miedo
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.fear}
+                </div>
+              </label>
+              <label className="block text-center">
+                Cuerpo
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.cuerpo}
+                </div>
+              </label>
+            </div>
           </>
         );
       case 4:
-        //Salud maxima, stat adjustment trauma response
+        // Salud maxima, trauma response, ajuste de stats
         return (
           <>
-            <div className="mb-4">
-              <label className="block mb-1">Salud máxima:</label>
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {formData.maxHP}
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="text-center col-span-1">
+                <label className="block">Salud máxima</label>
+                <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-4xl mx-auto">
+                  {formData.maxHP}
+                </div>
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-center">Trauma Response</label>
+                <div className="bg-black text-red-500 border border-red-500 p-2 mt-1 w-full text-center text-xl">
+                  {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
+                </div>
               </div>
             </div>
 
             {['ciberchaman', 'mecanico'].includes(formData.clase) && (
-              //Solo aparecen estos botones para las clases de ciberchaman y mecanico
+              // Solo aparecen estos botones para las clases de ciberchaman y mecanico
               <div className="mb-4">
                 <div className="block mb-2 font-mono">Ajuste de stats</div>
                 <div className="grid grid-cols-4 gap-2 mt-2">
@@ -518,16 +531,9 @@ export default function CreatePersonaje() {
                 </div>
               </div>
             )}
-
-            <div className="mb-4">
-              <label className="block mb-1">Trauma Response:</label>
-              <div className="bg-black text-white border border-red-500 p-2 mt-1 w-full">
-                {/**Busca en el array de CLASES la traumaResponse que se corresponde con la del form*/}
-                {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
-              </div>
-            </div>
           </>
         );
+
       case 5:
         //SkillTree component que me costó vida y media programar
         //Aparecen errores pero son mentira este tio funciona
@@ -577,7 +583,7 @@ export default function CreatePersonaje() {
         alt="Logo principal demonship"
       />
       {/**Fondo */}
-      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
+      <div className="fixed inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
 
       <h1 className="text-red-500 text-3xl uppercase border-b-2 border-red-500 pb-2 mb-6"></h1>
 
