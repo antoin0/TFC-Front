@@ -497,14 +497,14 @@ export default function CreatePersonaje() {
           <>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center col-span-1">
-                <label className="block">Salud máxima:</label>
+                <label className="block">Salud máxima</label>
                 <div className="w-24 aspect-square bg-black text-red-500 border border-red-500 mt-1 flex items-center justify-center text-3xl mx-auto">
                   {formData.maxHP}
                 </div>
               </div>
 
               <div className="col-span-2">
-                <label className="block text-center">Trauma Response:</label>
+                <label className="block text-center">Trauma Response</label>
                 <div className="bg-black text-red-500 border border-red-500 p-2 mt-1 w-full text-center text-xl">
                   {CLASES.find((t) => t.value === formData.traumaRes)?.traumaResponse}
                 </div>
@@ -585,7 +585,7 @@ export default function CreatePersonaje() {
         alt="Logo principal demonship"
       />
       {/**Fondo */}
-      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
+      <div className="fixed inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
 
       <h1 className="text-red-500 text-3xl uppercase border-b-2 border-red-500 pb-2 mb-6"></h1>
 
