@@ -72,7 +72,6 @@ export default function CharVisualizer() {
                             <span className="text-white">{pj["nombre"]}</span> | {pj["clase"]}
                         </h2>
 
-                        {/* Atributos principales */}
                         <div className="grid grid-cols-3 gap-x-4 text-sm mb-3">
 
                             {/* Atributos principales */}
