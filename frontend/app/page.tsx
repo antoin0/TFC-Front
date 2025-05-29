@@ -21,7 +21,7 @@ export default function Home() {
           <div className='border-2 border-red-500 w-1/2 mb-32'></div>
 
           {/** Botones */}
-          <div className="flex flex-col md:flex-row gap-12 ">
+          <div className="flex flex-col md:flex-row gap-50 ">
             <Link href="/CharacterCreator">
               <button className="bg-black text-white border-2 border-red-500 hover:bg-red-500 hover:text-black transition duration-200 px-8 py-4 text-3xl font-mono">
                 Crear personaje
