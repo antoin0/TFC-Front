@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import { useEffect, useState } from "react"
 
 const CLASES = [
@@ -59,6 +60,11 @@ export default function CharVisualizer() {
             {/* Fondo */}
             <div className="fixed inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#7c0a02_100%)]"></div>
 
+            <Link href="/">
+                <button className="bg-black text-white border-2 border-red-500 hover:bg-red-500 mt-3 ml-3 hover:text-black transition duration-200 px-8 py-4 text-xl font-mono w-50">
+                    Inicio
+                </button>
+            </Link>
 
             {pejotas.map((pj, index) => {
                 // Encontrar la clase correspondiente y obtener su traumaResponse
