@@ -25,6 +25,7 @@ _Node.js_
 _Npm o pnpm_
 
 _Visual Studio Code_
+
 _Primero debemos lanzar este comando desde TFC-Front/frontend/_
 
 ```
