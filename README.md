@@ -61,4 +61,4 @@ _Para que esta aplicacion escriba en base de datos debes descargarte [este repo]
 
 ## Licencia 📄
 
-Este proyecto está bajo la Licencia Mia Propia (LMP) que definitivamente tengo
+Este proyecto está desarrollado bajo Mi Propia Licencia Personal (MPLP) que definitivamente tengo
