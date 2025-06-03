@@ -10,13 +10,21 @@ _El objetivo principal es reducir el tiempo que se le dedica a la creación de p
 
 ### Pre-requisitos 📋
 
-_Ordenador y navegador posterior a 2010_
-_Node.js_
-_Npm o pnpm_
+_Intel core i5-5200 (minimo)_
+_Nvidia GeForce GTX 750ti_
+_8GB de RAM_
+_2GB libres de disco duro_
+
 
 ### Instalación 🔧
 
-_Para instalar este proyecto:_
+_Para instalar este proyecto necesitas primero:_
+
+_Node.js_
+
+_Npm o pnpm_
+
+_Visual Studio Code_
 _Primero debemos lanzar este comando desde TFC-Front/frontend/_
 
 ```
@@ -31,11 +39,10 @@ npm run dev
 
 ## Despliegue 📦
 
-_Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviaran a otro proyecto distinto, que está en otro repositorio_
+_Esta aplicacion es solo el frontend, quiere decir que los datos que rellenes en este formulario se enviarán a otro proyecto distinto, que está en otro repositorio_
 
 _Para que esta aplicacion escriba en base de datos debes descargarte [este repo](https://github.com/antoin0/TFC-Back)_
 
-⚠️AVISO⚠️ La pagina que está mas desarrollada NO es la que se encuentra en "/" es la de "/CharacterCreator"
 
 
 ## Construido con 🛠️
